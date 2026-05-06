@@ -20,7 +20,7 @@ class Veiculo {
         protected float $quilometragem,
         protected float $consumoMedio,
         protected int $numPortas,
-        protected string  $opcionais
+        protected string $opcionais
     ) {}
 
     public function exibirDados() {

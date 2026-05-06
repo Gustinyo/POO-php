@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-class Veiculo {
+abstract class Veiculo {
 
     public function __construct(
         protected string $especie,
@@ -20,10 +20,15 @@ class Veiculo {
         protected float $quilometragem,
         protected float $consumoMedio,
         protected int $numPortas,
-        protected string $opcionais
+        protected array $opcionais = []
     ) {}
 
-    public function exibirDados() {
+    
+    protected function dadosBasicos(): string {
+        $opcionaisTexto = empty($this->opcionais)
+            ? "Nenhum"
+            : implode(", ", $this->opcionais);
+
         return "Espécie: {$this->especie} <br>
                 Placa: {$this->placa} <br>
                 Marca: {$this->marca} <br>
@@ -40,11 +45,12 @@ class Veiculo {
                 Quilometragem: {$this->quilometragem} km <br>
                 Consumo Médio: {$this->consumoMedio} km/l <br>
                 Número de Portas: {$this->numPortas} <br>
-                Opcionais:  {$this->opcionais} <br>";
-
-
+                Opcionais: {$opcionaisTexto} <br>";
     }
+
+    abstract public function exibirDados(): string;
 }
+
 
 
 class VeiculoPasseio extends Veiculo {
@@ -68,7 +74,7 @@ class VeiculoPasseio extends Veiculo {
         float $quilometragem,
         float $consumoMedio,
         int $numPortas,
-        string $opcionais
+        array $opcionais = []
     ) {
         parent::__construct(
             $especie,
@@ -79,11 +85,12 @@ class VeiculoPasseio extends Veiculo {
         );
     }
 
-    public function exibirDados() {
-        return parent::exibirDados() .
+    public function exibirDados(): string {
+        return $this->dadosBasicos() .
                "Número de Passageiros: {$this->numPassageiros} <br>";
     }
 }
+
 
 
 class VeiculoCarga extends Veiculo {
@@ -110,7 +117,7 @@ class VeiculoCarga extends Veiculo {
         float $quilometragem,
         float $consumoMedio,
         int $numPortas,
-        string $opcionais
+        array $opcionais = []
     ) {
         parent::__construct(
             $especie,
@@ -121,8 +128,8 @@ class VeiculoCarga extends Veiculo {
         );
     }
 
-    public function exibirDados() {
-        return parent::exibirDados() .
+    public function exibirDados(): string {
+        return $this->dadosBasicos() .
                "Capacidade de Carga: {$this->capacidadeCarga} kg <br>
                 Altura: {$this->altura} m <br>
                 Largura: {$this->largura} m <br>
@@ -131,15 +138,17 @@ class VeiculoCarga extends Veiculo {
 }
 
 
+
+
 $carro = new VeiculoPasseio(
     5,
     "Passeio",
     "ABC1234", "Chevrolet", "Tracker", 2022, 2021,
     "123456", "7891011", "Nacional",
     "Prata", "Preto", "Flex", "1.0 Turbo",
-    34560, 14.0, 4, "Ar-condicionado, multimídia"
+    34560, 14.0, 4,
+    ["Ar-condicionado", "Multimídia"]
 );
-
 
 $caminhao = new VeiculoCarga(
     10000, 3.5, 2.5, 8,
@@ -147,8 +156,11 @@ $caminhao = new VeiculoCarga(
     "XYZ9876", "Volvo", "FH", 2020, 2019,
     "654321", "112233", "Importado",
     "Branco", "Cinza", "Diesel", "5.0",
-    200000, 6.5, 2, "Ar-condicionado, cabine leito"
+    200000, 6.5, 2,
+    ["Ar-condicionado", "Cabine leito"]
 );
+
+
 
 
 echo "<h2>Veículo de Passeio</h2>";
